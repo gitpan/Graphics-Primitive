@@ -1,5 +1,5 @@
 ---
-abstract: ''
+abstract: 'Device and library agnostic graphics objects'
 author:
   - 'Cory G Watson <gphat@cpan.org>'
 build_requires:
@@ -22,4 +22,4 @@ requires:
   Layout::Manager: 0
   Moose: 0
   MooseX::AttributeHelpers: 0
-version: 0.01
+version: 0.02

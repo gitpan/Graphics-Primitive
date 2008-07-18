@@ -17,9 +17,9 @@ no_index:
     - inc
     - t
 requires:
-  Geometry::Primitive: 0
-  Graphics::Color: 0
-  Layout::Manager: 0
-  Moose: 0
-  MooseX::AttributeHelpers: 0
-version: 0.03
+  Geometry::Primitive: 0.04
+  Graphics::Color: 0.04
+  Layout::Manager: 0.06
+  Moose: 0.54
+  MooseX::AttributeHelpers: 0.12
+version: 0.04

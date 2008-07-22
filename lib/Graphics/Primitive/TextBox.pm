@@ -1,36 +1,42 @@
-package Graphics::Primitive::Border;
+package Graphics::Primitive::TextBox;
 use Moose;
 
-extends 'Graphics::Primitive::Stroke';
+extends 'Graphics::Primitive::Component';
 
-use Graphics::Color;
+use Graphics::Primitive::Font
 
-has 'color' => (
+has 'font' => (
     is => 'rw',
-    isa => 'Graphics::Color',
+    isa => 'Graphics::Primitive::Font',
+    default => sub { Graphics::Primitive::Font->new }
 );
-has '+width' => ( default => sub { 0 });
+has 'text' => (
+    is => 'rw',
+    isa => 'Str',
+);
 
-no Moose;
 1;
 __END__
-
 =head1 NAME
 
-Graphics::Primitive::Border
+Graphics::Primitive::TextBox
 
 =head1 DESCRIPTION
 
-Graphics::Primitive::Border describes the border to be rendered around a
-component.
+Graphics::Primitive::TextBox is a Componet with text.
 
 =head1 SYNOPSIS
 
-  use Graphics::Primitive::Border;
+  use Graphics::Primitive::Font;
+  use Graphics::Primitive::TextBox;
 
-  my $border = Graphics::Primitive::Border->new({
-    width => 3
-  });
+  my $tx = Graphics::Primitive::TextBox->new(
+      font => Graphics::Primitive::Font->new(
+          face => 'Myriad Pro',
+          size => 12
+      ),
+      text => 'I am a textbox!'
+  );
 
 =head1 METHODS
 
@@ -40,9 +46,7 @@ component.
 
 =item I<new>
 
-Creates a new Graphics::Primitiver::Border.  Border extends Stroke and adds a
-color attribute. Has a default stroke if none is specified.  See the
-documentation for L<Graphics::Primitive::Stroke> for more information.
+Creates a new Graphics::Primitive::TextBox.
 
 =back
 
@@ -50,9 +54,13 @@ documentation for L<Graphics::Primitive::Stroke> for more information.
 
 =over 4
 
-=item I<color>
+=item I<font>
 
-Set/Get the Color.  Expected to be a L<Graphics::Color> object.
+Set this textbox's font
+
+=item I<text>
+
+Set this textbox's text.
 
 =back
 

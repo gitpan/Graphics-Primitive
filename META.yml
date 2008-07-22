@@ -19,7 +19,6 @@ no_index:
 requires:
   Geometry::Primitive: 0.04
   Graphics::Color: 0.04
-  Layout::Manager: 0.06
   Moose: 0.54
   MooseX::AttributeHelpers: 0.12
-version: 0.05
+version: 0.06

@@ -1,6 +1,8 @@
 package Graphics::Primitive::Container;
 use Moose;
 
+use Tree::Simple;
+
 extends 'Graphics::Primitive::Component';
 
 has 'components' => (
@@ -12,6 +14,11 @@ has 'components' => (
         'clear'=> 'clear_components',
         'count'=> 'component_count',
     }
+);
+has 'layout_manager' => (
+    is => 'rw',
+    isa => 'Layout::Manager',
+    handles => [ 'do_layout' ]
 );
 
 sub add_component {
@@ -25,15 +32,6 @@ sub add_component {
     });
 
     return 1;
-}
-
-sub do_prepare {
-    my ($self) = @_;
-
-    foreach my $c (@{ $self->components }) {
-        next unless defined($c->{component}) && $c->{component}->visible;
-        $c->{component}->prepare();
-    }
 }
 
 sub find_component {
@@ -60,6 +58,19 @@ sub get_component {
     }
     return undef;
 }
+
+override('get_tree', sub {
+    my ($self) = @_;
+
+    my $tree = Tree::Simple->new($self);
+
+    foreach my $c (@{ $self->components }) {
+        my $comp = $c->{component};
+        $tree->addChild($comp->get_tree);
+    }
+
+    return $tree;
+});
 
 sub remove_component {
     my ($self, $component) = @_;
@@ -99,15 +110,28 @@ sub validate_component {
     return 1;
 }
 
-override('prepare', sub {
+override('pack', sub {
     my ($self) = @_;
 
-    super;
-
-    foreach my $comp (@{ $self->components }) {
-        next unless defined($comp) && defined($comp->{component}) && $comp->{component}->visible;
-        $comp->{component}->prepare();
+    foreach my $c (@{ $self->components }) {
+        next unless defined($c) && defined($c->{component}) && $c->{component}->visible;
+        my $comp = $c->{component};
+        $comp->pack;
     }
+
+    super;
+});
+
+override('prepare', sub {
+    my ($self, $driver) = @_;
+
+    foreach my $c (@{ $self->components }) {
+        next unless defined($c) && defined($c->{component}) && $c->{component}->visible;
+        my $comp = $c->{component};
+        $comp->prepare($driver);
+    }
+
+    super($driver);
 });
 
 no Moose;
@@ -163,10 +187,6 @@ Remove all components from the layout manager.
 
 Returns the number of components in this container.
 
-=item I<do_prepare>
-
-Prepare this component and all it's child components.
-
 =item I<find_component>
 
 Find a component with the given name.
@@ -174,6 +194,12 @@ Find a component with the given name.
 =item I<get_component>
 
 Get the component at the specified index.
+
+=item I<get_tree>
+
+Returns a Tree::Simple object with this component at the root and all child
+components as children.  Calling this from your root container will result
+in a tree representation of the entire scene.
 
 =item I<remove_component>
 

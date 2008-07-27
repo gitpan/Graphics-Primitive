@@ -1,10 +1,14 @@
 package Graphics::Primitive::Component;
 use Moose;
 
+use overload ('""' => 'to_string');
+
 use Graphics::Primitive::Border;
 use Graphics::Primitive::Insets;
 use Geometry::Primitive::Point;
 use Geometry::Primitive::Rectangle;
+
+use Tree::Simple;
 
 has 'background_color' => ( is => 'rw', isa => 'Graphics::Color');
 has 'border' => (
@@ -39,28 +43,36 @@ has 'preferred_width' => ( is => 'rw', isa => 'Num', default => sub { 0 });
 has 'visible' => ( is => 'rw', isa => 'Bool', default => sub { 1 } );
 has 'width' => ( is => 'rw', isa => 'Num', default => sub { 0 } );
 
-sub prepare { }
+sub get_tree {
+    my ($self) = @_;
+
+    return Tree::Simple->new($self);
+}
 
 sub inside_width {
-    my $self = shift();
+    my ($self) = @_;
 
-    my $w = $self->width();
+    my $w = $self->width;
 
     $w -= $self->padding->left + $self->padding->right;
     $w -= $self->margins->left + $self->margins->right;
     $w -= $self->border->width * 2;
 
+    $w = 0 if $w < 0;
+
     return $w;
 }
 
 sub inside_height {
-    my $self = shift();
+    my ($self) = @_;
 
     my $h = $self->height;
 
     $h -= $self->padding->bottom + $self->padding->top;
     $h -= $self->margins->bottom + $self->margins->top;
     $h -= $self->border->width * 2;
+
+    $h = 0 if $h < 0;
 
     return $h;
 }
@@ -95,6 +107,24 @@ sub outside_height {
     my $w = $self->padding->top + $self->padding->bottom;
     $w += $self->margins->top + $self->margins->bottom;
     $w += $self->border->width * 2;
+}
+
+sub pack { }
+
+sub prepare {
+    my ($self, $driver) = @_;
+
+    $self->minimum_height($self->outside_height);
+    $self->minimum_width($self->outside_width);
+}
+
+sub to_string {
+    my ($self) = @_;
+
+    my $buff = defined($self->name) ? $self->name : ref($self);
+    $buff .= ': '.$self->origin->to_string;
+    $buff .= ' ('.$self->width.'x'.$self->height.')';
+    return $buff;
 }
 
 no Moose;
@@ -147,6 +177,11 @@ L<Border|Graphics::Primitive::Border>.
 
 Set this component's foreground color.
 
+=item I<get_tree>
+
+Get a tree for this component.  Since components are -- by definiton -- leaf
+nodes, this tree will only have the one member at it's root.
+
 =item I<height>
 
 Set this component's height.
@@ -174,6 +209,22 @@ L<Insets|Graphics::Primitive::Insets>.  Margins are the space I<outside> the
 component's bounding box, as in CSS.  The margins should be outside the
 border.
 
+=item I<maximum_height>
+
+Set/Get this component's maximum height.  Used to inform a layout manager.
+
+item I<maximum_width>
+
+Set/Get this component's maximum width.  Used to inform a layout manager.
+
+item I<minimum_height>
+
+Set/Get this component's minimum height.  Used to inform a layout manager.
+
+item I<minimum_width>
+
+Set/Get this component's minimum width.  Used to inform a layout manager.
+
 =item I<name>
 
 Set this component's name.  This is not required, but may inform consumers
@@ -191,6 +242,11 @@ Get the height consumed by padding, margin and borders.
 
 Get the width consumed by padding, margin and borders.
 
+=item I<pack>
+
+Method provided to give component one last opportunity to pack it's contents
+into the provided space.  Called after prepare.
+
 =item I<padding>
 
 Set this component's padding, which should be an instance of
@@ -203,22 +259,6 @@ border and the component's content.
 Method to prepare this component for drawing.  This is an empty sub and is
 meant to be overriden by a specific implemntation.
 
-=item I<maximum_height>
-
-Set/Get this component's maximum height.  Used to inform a layout manager.
-
-item I<maximum_width>
-
-Set/Get this component's maximum width.  Used to inform a layout manager.
-
-item I<minimum_height>
-
-Set/Get this component's minimum height.  Used to inform a layout manager.
-
-item I<minimum_width>
-
-Set/Get this component's minimum width.  Used to inform a layout manager.
-
 =item I<preferred_height>
 
 Set/Get this component's preferred height.  Used to inform a layout manager.
@@ -226,6 +266,12 @@ Set/Get this component's preferred height.  Used to inform a layout manager.
 =item I<preferred_width>
 
 Set/Get this component's preferred width.  Used to inform a layout manager.
+
+=item I<to_string>
+
+Get a string representation of this component in the form of:
+
+  $name $x,$y ($widthx$height)
 
 =item I<visible>
 

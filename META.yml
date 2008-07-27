@@ -21,4 +21,5 @@ requires:
   Graphics::Color: 0.04
   Moose: 0.54
   MooseX::AttributeHelpers: 0.12
-version: 0.06
+  Tree::Simple: 1.18
+version: 0.07

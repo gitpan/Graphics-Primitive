@@ -1,6 +1,8 @@
 package Graphics::Primitive::Path;
 use Moose;
 
+with 'MooseX::Clone';
+
 use MooseX::AttributeHelpers;
 
 extends 'Geometry::Primitive';
@@ -12,7 +14,7 @@ use Geometry::Primitive::Line;
 has 'current_point' => (
     is => 'rw',
     isa => 'Geometry::Primitive::Point',
-    default => sub { Geometry::Primitive::Point->new },
+    default => sub { Geometry::Primitive::Point->new(x => 0, y => 0) },
     clearer => 'clear_current_point'
 );
 
@@ -29,6 +31,8 @@ has 'primitives' => (
     }
 );
 
+# TODO rel_line_to, rel_move_to
+
 sub line_to {
     my ($self, $x, $y) = @_;
 
@@ -40,6 +44,20 @@ sub line_to {
     } else {
         $point = $x;
     }
+
+    $self->add_primitive(Geometry::Primitive::Line->new(
+            point_start => $self->current_point,
+            point_end => $point
+    ));
+    $self->current_point($point);
+}
+
+sub rel_line_to {
+    my ($self, $x, $y) = @_;
+
+    my $point = $self->current_point->clone;
+    $point->x($point->x + $x);
+    $point->y($point->y + $y);
 
     $self->add_primitive(Geometry::Primitive::Line->new(
             point_start => $self->current_point,
@@ -66,6 +84,8 @@ sub move_to {
 sub get_points {
     #TODO Implement me!
 }
+
+__PACKAGE__->meta->make_immutable;
 
 no Moose;
 1;
@@ -142,6 +162,12 @@ Geoemetry::Primitive::Point or two arguments for x and y.
 Move the current point to the one specified.  This will not add any
 primitives to the path.  Accepts either a Geoemetry::Primitive::Point or
 two arguments for x and y.
+
+=item I<rel_line_to>
+
+Draw a line by adding the supplied x and y values to the current one.  For
+example if the current point is 5,5 then calling rel_line_to(2, 2) would draw
+a line from the current point to 7,7.
 
 =back
 

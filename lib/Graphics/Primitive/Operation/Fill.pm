@@ -1,38 +1,33 @@
-package Graphics::Primitive::Border;
+package Graphics::Primitive::Operation::Fill;
 use Moose;
 
-extends 'Graphics::Primitive::Brush';
+extends 'Graphics::Primitive::Operation';
 
-use Graphics::Color;
-
-has 'color' => (
-    is => 'rw',
-    isa => 'Graphics::Color',
+has paint => (
+    isa => 'Graphics::Primitive::Paint',
+    is  => 'rw'
 );
-has '+width' => ( default => sub { 0 });
 
 __PACKAGE__->meta->make_immutable;
 
 no Moose;
 1;
 __END__
-
 =head1 NAME
 
-Graphics::Primitive::Border
+Graphics::Primitive::Operation::Fill
 
 =head1 DESCRIPTION
 
-Graphics::Primitive::Border describes the border to be rendered around a
-component.
+Graphics::Primitive::Operation::Fill represents a fill operation to be
+performed on a path.
 
 =head1 SYNOPSIS
 
-  use Graphics::Primitive::Border;
+  use Graphics::Primitive::Operation::Fill;
 
-  my $border = Graphics::Primitive::Border->new({
-    width => 3
-  });
+  my $stroke = Graphics::Primitive::Operation::Fill->new;
+  $stroke->paint(Graphics::Primitive::Paint::Solid->new);
 
 =head1 METHODS
 
@@ -42,9 +37,7 @@ component.
 
 =item I<new>
 
-Creates a new Graphics::Primitiver::Border.  Border extends Brush and adds a
-color attribute. Has a default stroke if none is specified.  See the
-documentation for L<Graphics::Primitive::Brush> for more information.
+Creates a new Graphics::Primitive::Operation::Fill.
 
 =back
 
@@ -52,9 +45,9 @@ documentation for L<Graphics::Primitive::Brush> for more information.
 
 =over 4
 
-=item I<color>
+=item I<paint>
 
-Set/Get the Color.  Expected to be a L<Graphics::Color> object.
+Set/Get the L<Paint|Graphics::Primitive::Paint> to use for this fill.
 
 =back
 

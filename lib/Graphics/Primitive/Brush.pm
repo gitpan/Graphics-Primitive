@@ -1,14 +1,17 @@
-package Graphics::Primitive::Stroke;
+package Graphics::Primitive::Brush;
 use Moose;
 use Moose::Util::TypeConstraints;
 
 enum 'LineCap' => qw(butt round square);
 enum 'LineJoin' => qw(miter round bevel);
 
+has 'color' => ( is => 'rw', isa => 'Graphics::Color' );
 has 'dash_pattern' => ( is => 'rw', isa => 'ArrayRef' );
 has 'width' => ( is => 'rw', isa => 'Int', default => 1 );
 has 'line_cap' => ( is => 'rw', isa => 'LineCap', default => 'butt' );
 has 'line_join' => ( is => 'rw', isa => 'LineJoin', default => 'miter' );
+
+__PACKAGE__->meta->make_immutable;
 
 no Moose;
 1;
@@ -16,18 +19,18 @@ __END__
 
 =head1 NAME
 
-Graphics::Primitive::Stroke
+Graphics::Primitive::Brush
 
 =head1 DESCRIPTION
 
-Graphics::Primitive::Stroke represents the visible trace of 'ink' along a
+Graphics::Primitive::Brush represents the visible trace of 'ink' along a
 path.
 
 =head1 SYNOPSIS
 
-  use Graphics::Primitive::Stroke;
+  use Graphics::Primitive::Brush;
 
-  my $stroke = Graphics::Primitive::Stroke->new({
+  my $stroke = Graphics::Primitive::Brush->new({
     line_cap => 'round',
     line_join => 'miter',
     width => 2
@@ -41,7 +44,7 @@ path.
 
 =item I<new>
 
-Creates a new Graphics::Primitive::Stroke.  Defaults to a width of 1,
+Creates a new Graphics::Primitive::Brush.  Defaults to a width of 1,
 a line_cap 'butt' and a line_join of 'miter'.
 
 =back
@@ -49,6 +52,10 @@ a line_cap 'butt' and a line_join of 'miter'.
 =head2 Instance Methods
 
 =over 4
+
+=item I<color>
+
+Set/Get this brush's color.
 
 =item I<dash_pattern>
 

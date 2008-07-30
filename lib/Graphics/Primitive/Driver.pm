@@ -1,5 +1,10 @@
 package Graphics::Primitive::Driver;
-use Moose;
+use Moose::Role;
+
+requires qw(
+    _draw_canvas _draw_component _draw_line _draw_textbox
+    _do_stroke data get_text_bounding_box write
+);
 
 sub data {
     my ($self) = @_;
@@ -11,7 +16,9 @@ sub draw {
     die('Components must be objects.') unless ref($comp);
     # The order of this is important, since isa will return true for any
     # superclass...
-    if($comp->isa('Graphics::Primitive::TextBox')) {
+    if($comp->isa('Graphics::Primitive::Canvas')) {
+        $self->_draw_canvas($comp);
+    } elsif($comp->isa('Graphics::Primitive::TextBox')) {
         $self->_draw_textbox($comp);
     } elsif($comp->isa('Graphics::Primitive::Component')) {
         $self->_draw_component($comp);
@@ -36,11 +43,15 @@ __END__
 
 =head1 NAME
 
-Graphics::Primitive::Driver
+Graphics::Primitive::Driver - Role for driver implementations
 
 =head1 DESCRIPTION
 
-A Component is an entity with a graphical representation.
+What good is a library agnostic intermediary representation of graphical
+components if you can't feed them to a library specific implementation that
+turns them into drawings? Psht, none!
+
+To write a driver for Graphics::Primitive implemeent this role.  
 
 =head1 SYNOPSIS
 
@@ -51,9 +62,34 @@ A Component is an entity with a graphical representation.
     width => 500, height => 350
   });
 
+=head1 WARNING
+
+Only this class or the driver itself should call methods starting with an
+underscore, as this interface may change.
+
 =head1 METHODS
 
 =over 4
+
+=item I<_draw_canvas>
+
+Draw a canvas.
+
+=item I<_draw_component>
+
+Draw a component.
+
+=item I<_draw_line>
+
+Draw a line.
+
+=item I<_draw_textbox>
+
+Draw a textbox.
+
+=item I<_do_stroke>
+
+Perform a stroke.
 
 =item I<data>
 
@@ -63,6 +99,11 @@ Retrieve the results of this driver's operations.
 
 Draws the given Graphics::Primitive::Component.  If the component is a
 container then all components therein are drawn, recursively.
+
+=item I<get_text_bounding_box>
+
+Given a L<Font|Graphics::Primitive::Font> and a string, returns a bounding box
+of the rendered text.
 
 =item I<write>
 

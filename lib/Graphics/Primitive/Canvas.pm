@@ -4,23 +4,30 @@ use MooseX::AttributeHelpers;
 
 extends 'Graphics::Primitive::Component';
 
+with 'MooseX::Clone';
+
 use Graphics::Primitive::Path;
 
 has path => (
     isa => 'Graphics::Primitive::Path',
     is  => 'rw',
     default =>  sub { Graphics::Primitive::Path->new },
-    handles => [ 'current_point', 'line_to', 'move_to', 'rel_line_to' ]
+    handles => [
+        'arc', 'close_path', 'current_point', 'line_to', 'move_to',
+        'rel_line_to', 'rel_move_to'
+    ]
 );
 
 has paths => (
     metaclass => 'Collection::Array',
     isa => 'ArrayRef',
     is  => 'rw',
+    traits => [qw(Clone)],
     default =>  sub { [] },
     provides => {
         push => 'add_path',
-        count=> 'path_count'
+        count=> 'path_count',
+        get => 'get_path'
     }
 );
 
@@ -28,6 +35,7 @@ has saved_paths => (
     metaclass => 'Collection::Array',
     isa => 'ArrayRef',
     is  => 'rw',
+    traits => [qw(Copy)],
     default =>  sub { [] },
     provides => {
         push => 'push_path',
@@ -39,7 +47,7 @@ has saved_paths => (
 sub do {
     my ($self, $op) = @_;
 
-    $self->add_path({ op => $op, path => $self->path });
+    $self->add_path({ op => $op, path => $self->path->clone });
     $self->path(Graphics::Primitive::Path->new);
 }
 
@@ -64,7 +72,7 @@ no Moose;
 __END__
 =head1 NAME
 
-Grahics::Primitive::Canvas
+Grahics::Primitive::Canvas - Component composed of paths
 
 =head1 DESCRIPTION
 

@@ -2,6 +2,8 @@ package Graphics::Primitive::Brush;
 use Moose;
 use Moose::Util::TypeConstraints;
 
+with 'MooseX::Clone';
+
 enum 'LineCap' => qw(butt round square);
 enum 'LineJoin' => qw(miter round bevel);
 
@@ -19,7 +21,7 @@ __END__
 
 =head1 NAME
 
-Graphics::Primitive::Brush
+Graphics::Primitive::Brush - Description of stroke
 
 =head1 DESCRIPTION
 

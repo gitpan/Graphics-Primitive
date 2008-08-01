@@ -3,6 +3,8 @@ use Moose;
 
 extends 'Graphics::Primitive::Brush';
 
+with 'MooseX::Clone';
+
 use Graphics::Color;
 
 has 'color' => (
@@ -19,7 +21,7 @@ __END__
 
 =head1 NAME
 
-Graphics::Primitive::Border
+Graphics::Primitive::Border - Line around components
 
 =head1 DESCRIPTION
 

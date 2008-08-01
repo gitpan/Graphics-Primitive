@@ -3,6 +3,8 @@ use Moose;
 
 with 'Geometry::Primitive::Equal';
 
+with 'MooseX::Clone';
+
 has 'top' => ( is => 'rw', isa => 'Num', default => 0 );
 has 'bottom' => ( is => 'rw', isa => 'Num', default => 0 );
 has 'left' => ( is => 'rw', isa => 'Num', default => 0 );
@@ -28,7 +30,7 @@ no Moose;
 __END__
 =head1 NAME
 
-Graphics::Primitive::Insets
+Graphics::Primitive::Insets - Space between things
 
 =head1 DESCRIPTION
 

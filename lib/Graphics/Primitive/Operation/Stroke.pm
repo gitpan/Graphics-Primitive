@@ -3,6 +3,8 @@ use Moose;
 
 extends 'Graphics::Primitive::Operation';
 
+with 'MooseX::Clone';
+
 use Graphics::Primitive::Brush;
 
 has brush => (
@@ -18,7 +20,7 @@ no Moose;
 __END__
 =head1 NAME
 
-Graphics::Primitive::Operation::Stroke
+Graphics::Primitive::Operation::Stroke - Draw along a path
 
 =head1 DESCRIPTION
 

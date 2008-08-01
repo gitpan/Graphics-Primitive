@@ -5,6 +5,8 @@ use Tree::Simple;
 
 extends 'Graphics::Primitive::Component';
 
+with 'MooseX::Clone';
+
 has 'components' => (
     metaclass => 'Collection::Array',
     is => 'rw',
@@ -142,7 +144,7 @@ __END__
 
 =head1 NAME
 
-Graphics::Primitive::Container
+Graphics::Primitive::Container - Component that holds other Components
 
 =head1 DESCRIPTION
 
@@ -194,7 +196,7 @@ added.
 
 Remove all components from the layout manager.
 
-=item I<count_components>
+=item I<component_count>
 
 Returns the number of components in this container.
 

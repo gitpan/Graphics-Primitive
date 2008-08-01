@@ -3,6 +3,8 @@ use Moose;
 
 extends 'Graphics::Primitive::Operation';
 
+with 'MooseX::Clone';
+
 has paint => (
     isa => 'Graphics::Primitive::Paint',
     is  => 'rw'
@@ -15,7 +17,7 @@ no Moose;
 __END__
 =head1 NAME
 
-Graphics::Primitive::Operation::Fill
+Graphics::Primitive::Operation::Fill - Paint inside a path
 
 =head1 DESCRIPTION
 

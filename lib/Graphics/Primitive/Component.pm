@@ -1,6 +1,8 @@
 package Graphics::Primitive::Component;
 use Moose;
 
+with 'MooseX::Clone';
+
 use overload ('""' => 'to_string');
 
 use Graphics::Primitive::Border;
@@ -135,7 +137,7 @@ __END__
 
 =head1 NAME
 
-Graphics::Primitive::Component
+Graphics::Primitive::Component - Base graphical unit
 
 =head1 DESCRIPTION
 

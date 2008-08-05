@@ -15,13 +15,11 @@ has 'current_point' => (
     default => sub { Geometry::Primitive::Point->new(x => 0, y => 0) },
     clearer => 'clear_current_point'
 );
-
 has 'contiguous' => (
     isa => 'Str',
     is  => 'rw',
     default =>  sub { 0 },
 );
-
 has 'hints' => (
     metaclass => 'Collection::Array',
     is => 'rw',
@@ -33,7 +31,6 @@ has 'hints' => (
         get => 'get_hint',
     }
 );
-
 has 'primitives' => (
     metaclass => 'Collection::Array',
     is => 'rw',
@@ -124,7 +121,6 @@ sub move_to {
     # Move to effectively creates a new path, so we are no longer contiguous.
     # This mainly serves as a backend hint.
     $self->contiguous(0);
-
     $self->current_point($point);
 }
 

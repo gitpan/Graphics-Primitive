@@ -7,7 +7,7 @@ Graphics::Primitive - Device and library agnostic graphic primitives
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 __PACKAGE__->meta->make_immutable;
 
@@ -35,7 +35,7 @@ and the like.
     $c->pack;
     
     $driver->draw($c);
-    $driver->write()
+    $driver->write
 
 =head1 DISCLAIMER
 

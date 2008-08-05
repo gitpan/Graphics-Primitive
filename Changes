@@ -1,5 +1,11 @@
 Revision history for Graphics-Primitive
 
+0.11
+  - Small optimizations
+  - Driver: add reset
+  - Textbox: Add angle
+  - Use Forest rather than Tree::Simple per stevan's request
+
 0.10
   - Path: add rectangle
   - New feature & hint: Add "preserve" to Operation.  Setting this causes

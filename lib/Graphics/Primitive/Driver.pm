@@ -3,15 +3,29 @@ use Moose::Role;
 
 requires qw(
     _draw_canvas _draw_component _draw_line _draw_path _draw_rectangle
-    _draw_textbox _do_fill _do_stroke data get_text_bounding_box reset write
+    _draw_textbox _do_fill _do_stroke _finish_page _resize data 
+    get_text_bounding_box reset write
 );
 
 sub draw {
     my ($self, $comp) = @_;
 
+    if($comp->page) {
+        # FIRST_PAGE is a little protection to ensure that we don't call
+        # show page on the first page, as that would mean we'd have an
+        # empty first page all the time.
+        if($self->{FIRST_PAGE}) {
+            $self->_finish_page;
+        } else {
+            $self->{FIRST_PAGE} = 1;
+        }
+        $self->_resize($comp->width, $comp->height);
+    }
+
     die('Components must be objects.') unless ref($comp);
     # The order of this is important, since isa will return true for any
     # superclass...
+    # TODO Check::ISA
     if($comp->isa('Graphics::Primitive::Canvas')) {
         $self->_draw_canvas($comp);
     } elsif($comp->isa('Graphics::Primitive::TextBox')) {
@@ -25,6 +39,42 @@ sub draw {
             foreach my $subcomp (@{ $comp->components }) {
                 $self->draw($subcomp->{component});
             }
+        }
+    }
+}
+
+sub pack {
+    my ($self, $comp) = @_;
+
+    $comp->pack($self);
+
+    # TODO Check::ISA
+    if($comp->isa('Graphics::Primitive::Container')) {
+        foreach my $c (@{ $comp->components }) {
+            next unless defined($c) && defined($c->{component}) && $c->{component}->visible;
+            $self->pack($c->{component});
+        }
+    }
+    $self->reset;
+}
+
+sub prepare {
+    my ($self, $comp) = @_;
+
+    unless(defined($self->width)) {
+        $self->width($comp->width);
+    }
+    unless(defined($self->height)) {
+        $self->height($comp->height);
+    }
+
+    $comp->prepare($self);
+
+    # TODO Check::ISA
+    if($comp->isa('Graphics::Primitive::Container')) {
+        foreach my $c (@{ $comp->components }) {
+            next unless defined($c) && defined($c->{component}) && $c->{component}->visible;
+            $self->prepare($c->{component});
         }
     }
 }
@@ -132,6 +182,15 @@ Draw a rectangle.
 
 Draw a textbox.
 
+=item I<_resize ($width, $height)>
+
+Resize the current working surface to the size specified.
+
+=item I<_finish_page>
+
+Finish the current 'page' and start a new one.  Some drivers that are not
+paginated may need to emulate this behaviour.
+
 =item I<data>
 
 Retrieve the results of this driver's operations.
@@ -145,6 +204,14 @@ container then all components therein are drawn, recursively.
 
 Given a L<Font|Graphics::Primitive::Font> and a string, returns a bounding box
 of the rendered text.
+
+=item I<pack>
+
+Pack the supplied component and any child components, recursively.
+
+=item I<prepare>
+
+Prepare the supplied component and any child components, recursively.
 
 =item I<write>
 

@@ -85,6 +85,8 @@ sub prepare {
             $self->prepare($c);
         }
     }
+
+    $comp->prepared(1);
 }
 
 no Moose;

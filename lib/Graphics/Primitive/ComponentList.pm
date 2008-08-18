@@ -10,6 +10,7 @@ has 'components' => (
     provides => {
         'count'=> 'component_count',
         'get' => 'get_component',
+        'push' => 'push_components',
         'set'=> 'set_component'
     },
 );
@@ -22,6 +23,7 @@ has 'constraints' => (
     provides => {
         'count'=> 'constraint_count',
         'get' => 'get_constraint',
+        'push' => 'push_constraints',
         'set' => 'set_constraint'
     },
 );
@@ -39,6 +41,44 @@ sub clear {
 
     $self->components([]);
     $self->constraints([]);
+}
+
+sub each {
+    my ($self, $functor) = @_;
+
+    for(my $i = 0; $i < scalar(@{ $self->components }); $i++) {
+        my $component = $self->get_component($i);
+        my $constraint = $self->get_constraint($i);
+
+        next unless defined($component);
+
+        $functor->($component, $constraint);
+    }
+}
+
+sub find {
+    my ($self, $predicate) = @_;
+
+    my $newlist = Graphics::Primitive::ComponentList->new;
+    for(my $i = 0; $i < scalar(@{ $self->components }); $i++) {
+
+        my $component = $self->get_component($i);
+        my $constraint = $self->get_constraint($i);
+
+        next unless defined($component);
+
+        if($component->can('component_list')) {
+            my $list = $component->find($predicate);
+            $newlist->push_components($list->components);
+            $newlist->push_constraints($list->constraints);
+        }
+
+        if($predicate->($component, $constraint)) {
+            $newlist->add_component($component, $constraint);
+        }
+    }
+
+    return $newlist;
 }
 
 sub find_component {
@@ -144,6 +184,34 @@ Returns the number of components in this list.
 =item I<constraint_count>
 
 Returns the number of constraints in this list.
+
+=item I<each>
+
+Calls the supplied CODEREF for each component in this list, passing the
+component and it's constraints as arguments.
+
+  my $flist = $list->each(
+    sub{
+        my ($component, $constraint) = @_; $comp->class('foo)
+    }
+  );
+
+
+=item I<find>
+
+Returns a new ComponentList containing only the components for which the
+supplied CODEREF returns true.  The coderef is called for each component and
+is passed the component and it's constraints.  Undefined components (the ones
+left around after a remove_component) are automatically skipped.
+
+  my $flist = $list->find(
+    sub{
+      my ($component, $constraint) = @_; return $comp->class eq 'foo'
+    }
+  );
+
+If no matching components are found then a new list is returned so that simple
+calls liked $container->find(...)->each(...) don't explode.
 
 =item I<find_component>
 

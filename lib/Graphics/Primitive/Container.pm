@@ -13,7 +13,7 @@ has 'component_list' => (
     is => 'rw',
     isa => 'Graphics::Primitive::ComponentList',
     default => sub { Graphics::Primitive::ComponentList->new },
-    handles => [qw(component_count components constraints find_component get_component get_constraint)],
+    handles => [qw(component_count components constraints each find find_component get_component get_constraint)],
     trigger => sub { my ($self) = @_; $self->prepared(0); }
 );
 has 'layout_manager' => (

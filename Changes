@@ -1,5 +1,17 @@
 Revision history for Graphics-Primitive
 
+0.17
+  - Useless whitespace changes
+  - POD typos fixed
+  - Border: switch from a single width to per-side Brushes
+  - Brush: add derive, equal_to and not_equal_to
+  - Border: now cloneable
+  - Border: add homogeneous, equal_to and not_equal_to
+  - Insets: ad as_array
+
+0.16
+  - Opps, I forgot. :(
+
 0.15
   - Add prepared flag to components.  Attributes that affect rendering have
     been modified to set prepared to 0 via a trigger.  Any new attributes

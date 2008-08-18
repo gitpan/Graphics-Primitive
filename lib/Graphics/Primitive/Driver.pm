@@ -57,14 +57,13 @@ sub pack {
 
     $comp->pack($self);
 
-    # TODO Check::ISA
     if($comp->isa('Graphics::Primitive::Container')) {
         foreach my $c (@{ $comp->components }) {
-            next unless defined($c) && defined($c->{component}) && $c->{component}->visible;
+            next unless defined($c) && defined($c->{component})
+                && $c->{component}->visible;
             $self->pack($c->{component});
         }
     }
-    # $self->reset;
 }
 
 sub prepare {
@@ -102,7 +101,7 @@ What good is a library agnostic intermediary representation of graphical
 components if you can't feed them to a library specific implementation that
 turns them into drawings? Psht, none!
 
-To write a driver for Graphics::Primitive implemeent this role.  
+To write a driver for Graphics::Primitive implement this role.
 
 =head1 SYNOPSIS
 

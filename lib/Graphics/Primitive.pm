@@ -1,7 +1,7 @@
 package Graphics::Primitive;
 use Moose;
 
-our $VERSION = '0.28';
+our $VERSION = '0.29';
 
 __PACKAGE__->meta->make_immutable;
 
@@ -31,11 +31,11 @@ and the like.
 
     my $driver = Graphics::Primitive::Driver::Cairo->new(format => 'SVG');
 
-    $c->prepare($driver);
-    $c->pack;
-    
+    $driver->prepare($c);
+    $driver->finalize($c);
     $driver->draw($c);
-    $driver->write
+
+    $driver->write($filename)
 
 =head1 DISCLAIMER
 

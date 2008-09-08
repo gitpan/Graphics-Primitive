@@ -1,9 +1,11 @@
 package Graphics::Primitive::TextBox;
 use Moose;
+use MooseX::Storage;
 
 extends 'Graphics::Primitive::Component';
 
 with qw(MooseX::Clone Graphics::Primitive::Aligned);
+with Storage (format => 'JSON', io => 'File');
 
 use Graphics::Primitive::Font;
 use Text::Flow;
@@ -42,7 +44,7 @@ has 'text_bounding_box' => (
 );
 has '+vertical_alignment' => ( default => sub { 'top'} );
 
-override('pack', sub {
+override('finalize', sub {
     my ($self, $driver) = @_;
 
     super;
@@ -54,8 +56,6 @@ override('pack', sub {
 
 override('prepare', sub {
     my ($self, $driver) = @_;
-
-    return if $self->prepared;
 
     super;
 

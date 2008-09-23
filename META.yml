@@ -24,4 +24,4 @@ requires:
   MooseX::Clone: 0.03
   MooseX::Storage: 0.14
   Text::Flow: 0.01
-version: 0.31
+version: 0.32

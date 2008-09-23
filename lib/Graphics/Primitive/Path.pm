@@ -9,6 +9,7 @@ use MooseX::AttributeHelpers;
 
 use Geometry::Primitive::Arc;
 use Geometry::Primitive::Bezier;
+use Geometry::Primitive::Ellipse;
 use Geometry::Primitive::Line;
 use Geometry::Primitive::Rectangle;
 
@@ -84,6 +85,21 @@ sub arc {
     }
 
     $self->add_primitive($arc);
+}
+
+sub ellipse {
+    my ($self, $width, $height, $line_to) = @_;
+
+    my $ell = Geometry::Primitive::Ellipse->new(
+        origin => $self->current_point->clone,
+        width => $width, height => $height
+    );
+
+    unless($line_to) {
+        $self->line_to($ell->point_start);
+    }
+
+    $self->add_primitive($ell);
 }
 
 sub close_path {
@@ -266,6 +282,12 @@ Returns the current -- or last -- point on this Path.
 
 Creates a cubic Bézier curve from the current point to the $end point using
 $control1 and $control2 as control points.
+
+=item I<ellipse ($width, $height, [ $skip_line_to ])>
+
+Creates an ellipse at the current point with the specified width and height.
+Optional last argument, if true, skips drawing a line to the ellipse's
+starting point.
 
 =item I<get_points>
 

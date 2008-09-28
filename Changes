@@ -1,5 +1,13 @@
 Revision history for Graphics-Primitive
 
+0.33
+  - Driver: Don't mark things prepared, that's Layout::Manager's job
+  - TextBox: simplify logic and return from prepare immediately after super if
+    there is no text
+  - TextBox: make some 'enumed' attributes plain Strings, since different
+    drivers will have different values
+  - Remove Text::Flow requirement
+
 0.32
   - Fix POD typo (thanks Brian Cassidy)
   - TextBox: Don't resize during prepare unless it's new minimums are bigger

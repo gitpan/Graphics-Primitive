@@ -3,13 +3,13 @@ use Moose;
 use MooseX::Storage;
 use Moose::Util::TypeConstraints;
 
-enum 'Graphics::Primitive::TextBox::Directions' => (
-    'auto', 'ltr', 'rtl'
-);
-enum 'Graphics::Primitive::TextBox::WrapModes'
-    => qw(word char word_char);
-enum 'Graphics::Primitive::TextBox::EllipsizeModes'
-    => qw(none start middle end);
+# enum 'Graphics::Primitive::TextBox::Directions' => (
+#     'auto', 'ltr', 'rtl'
+# );
+# enum 'Graphics::Primitive::TextBox::WrapModes'
+#     => qw(word char word_char);
+# enum 'Graphics::Primitive::TextBox::EllipsizeModes'
+#     => qw(none start middle end);
 
 extends 'Graphics::Primitive::Component';
 
@@ -25,13 +25,11 @@ has 'angle' => (
 );
 has 'direction' => (
     is => 'rw',
-    isa => 'Graphics::Primitive::TextBox::Directions',
-    default => sub { 'auto' }
+    isa => 'Str',
 );
 has 'ellipsize_mode' => (
     is => 'rw',
-    isa => 'Graphics::Primitive::TextBox::EllipsizeModes',
-    default => sub { 'none' }
+    isa => 'Str',
 );
 has 'font' => (
     is => 'rw',
@@ -75,8 +73,7 @@ has 'text_bounding_box' => (
 has '+vertical_alignment' => ( default => sub { 'top'} );
 has 'wrap_mode' => (
     is => 'rw',
-    isa => 'Graphics::Primitive::TextBox::WrapModes',
-    default => sub { 'word' }
+    isa => 'Str',
 );
 
 override('prepare', sub {
@@ -84,18 +81,28 @@ override('prepare', sub {
 
     super;
 
+    return unless defined($self->text);
+
     my $layout = $driver->get_textbox_layout($self);
     $self->layout($layout);
 
     my $mh = $layout->height + $self->outside_height;
-    unless($mh < $self->minimum_height) {
+    if($mh > $self->minimum_height) {
         $self->minimum_height($mh);
     }
 
     my $mw = $layout->width + $self->outside_width;
-    unless($mw < $self->minimum_width) {
+    if($mw > $self->minimum_width) {
         $self->minimum_width($mw);
     }
+
+    # if(($self->height) && ($self->height < $self->minimum_height)) {
+    #     $self->height($self->minimum_height);
+    # }
+
+    # if(($self->width) && ($self->width < $self->minimum_width)) {
+    #     $self->width($self->minimum_width);
+    # }
 });
 
 __PACKAGE__->meta->make_immutable;

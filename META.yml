@@ -17,10 +17,10 @@ no_index:
     - t
 requires:
   Forest: 0.04
-  Geometry::Primitive: 0.12
-  Graphics::Color: 0.15
+  Geometry::Primitive: 0.13
+  Graphics::Color: 0.16
   Moose: 0.54
   MooseX::AttributeHelpers: 0.12
   MooseX::Clone: 0.03
   MooseX::Storage: 0.14
-version: 0.33
+version: 0.34

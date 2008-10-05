@@ -1,23 +1,16 @@
-package Graphics::Primitive::Paint::Gradient;
+package Graphics::Primitive::Paint::Gradient::Linear;
 use Moose;
 use Moose::Util::TypeConstraints;
 use MooseX::AttributeHelpers;
 use MooseX::Storage;
 
-extends 'Graphics::Primitive::Paint';
+extends 'Graphics::Primitive::Paint::Gradient';
 
-# FIXME key should be <= 1
-has color_stops => (
-    metaclass => 'Collection::Hash',
-    isa => 'HashRef',
-    is  => 'rw',
-    default =>  sub { {} },
-    provides => {
-        count => 'stop_count',
-        keys => 'stops',
-        get  => 'get_stop',
-        set  => 'add_stop'
-    }
+with Storage (format => 'JSON', io => 'File');
+
+has line => (
+    isa => 'Geometry::Primitive::Line',
+    is => 'rw',
 );
 
 __PACKAGE__->meta->make_immutable;
@@ -27,12 +20,24 @@ no Moose;
 __END__
 =head1 NAME
 
-Graphics::Primitive::Paint::Gradient - Color blending
+Graphics::Primitive::Paint::Gradient::Linear - Linear color blending
 
 =head1 DESCRIPTION
 
-Graphics::Primitive::Paint::Gradient is a base class used by color blending
-techniques such as linear and radial.  You should not use this class directly.
+Graphics::Primitive::Paint::Gradient::Linear is a gradient along a line.
+
+=head1 SYNOPSIS
+
+  use Graphics::Primitive::Paint::Gradient::Line;
+
+  my $gradient = Graphics::Primitive::Gradient::Line->new(
+      line => Geometry::Primitive::Line->new(
+          start => Graphics::Primitive::Point->new(x => 0, y => 0),
+          end   => Graphics::Primitive::Point->new(x => 0, y => 10),
+      )
+  );
+  $gradient->add_stop(0.0, $color1);
+  $gradient->add_stop(1.0, $color2);
 
 =head1 METHODS
 
@@ -57,6 +62,10 @@ Adds a color stop at the specified position
 =item I<colors>
 
 Hashref of colors and their stops.  The stops are the keys.
+
+=item I<line>
+
+The line along which the gradient should run.
 
 =item I<stop_count>
 

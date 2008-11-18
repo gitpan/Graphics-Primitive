@@ -28,9 +28,9 @@ Graphics::Primitive::Paint::Gradient::Linear is a gradient along a line.
 
 =head1 SYNOPSIS
 
-  use Graphics::Primitive::Paint::Gradient::Line;
+  use Graphics::Primitive::Paint::Gradient::Linear;
 
-  my $gradient = Graphics::Primitive::Gradient::Line->new(
+  my $gradient = Graphics::Primitive::Gradient::Linear->new(
       line => Geometry::Primitive::Line->new(
           start => Graphics::Primitive::Point->new(x => 0, y => 0),
           end   => Graphics::Primitive::Point->new(x => 0, y => 10),

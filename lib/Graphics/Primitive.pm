@@ -1,7 +1,7 @@
 package Graphics::Primitive;
 use Moose;
 
-our $VERSION = '0.38';
+our $VERSION = '0.39';
 
 __PACKAGE__->meta->make_immutable;
 
@@ -36,11 +36,6 @@ and the like.
     $driver->draw($c);
 
     $driver->write($filename)
-
-=head1 DISCLAIMER
-
-Graphics::Primitive is in a heavy state of flux.  Anything that depends on it
-is likely to break a lot.
 
 =head1 DESCRIPTION
 

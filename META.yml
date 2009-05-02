@@ -23,4 +23,4 @@ requires:
   MooseX::AttributeHelpers: 0.17
   MooseX::Clone: 0.03
   MooseX::Storage: 0.17
-version: 0.40
+version: 0.41

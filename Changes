@@ -1,5 +1,9 @@
 Revision history for Graphics-Primitive
 
+0.42
+  - Reverting 0.41 (ha!)
+  - Add width to insets, sets all insets in one call
+
 0.41
   - Don't re-layout already laid out textboxes (might get reverted)
 

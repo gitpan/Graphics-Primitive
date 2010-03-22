@@ -1,7 +1,7 @@
 package Graphics::Primitive;
 use Moose;
 
-our $VERSION = '0.49';
+our $VERSION = '0.51';
 
 __PACKAGE__->meta->make_immutable;
 
@@ -86,6 +86,10 @@ L<CSS|http://www.w3.org/Style/CSS/>'s box model.
 =head1 AUTHOR
 
 Cory Watson, C<< <gphat@cpan.org> >>
+
+=head1 CONTRIBUTORS
+
+Florian Ragwitz
 
 =head1 ACKNOWLEDGEMENTS
 

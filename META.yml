@@ -8,7 +8,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.91'
+generated_by: 'Module::Install version 0.94'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -23,10 +23,10 @@ requires:
   Geometry::Primitive: 0.16
   Graphics::Color: 0.20
   JSON::Any: 1.22
-  Moose: 0.79
-  MooseX::AttributeHelpers: 0.17
+  Moose: 0.90
   MooseX::Clone: 0.04
   MooseX::Storage: 0.17
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.49
+  repository: git://github.com/gphat/graphics-primitive.git
+version: 0.51

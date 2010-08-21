@@ -1,7 +1,7 @@
 package Graphics::Primitive;
 use Moose;
 
-our $VERSION = '0.51';
+our $VERSION = '0.52';
 
 __PACKAGE__->meta->make_immutable;
 
@@ -95,15 +95,9 @@ Florian Ragwitz
 
 Many of the ideas here come from my experience using the Cairo library.
 
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-geometry-primitive at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Geometry-Primitive>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008-2009 by Cory G Watson.
+Copyright 2008-2010 by Cory G Watson.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

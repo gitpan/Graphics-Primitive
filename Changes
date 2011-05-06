@@ -1,7 +1,8 @@
 Revision history for Graphics-Primitive
 
-0.53    Feb 18, 2011
-  - Add callback to Component
+0.60    May 5, 2011
+  - If minimum_width or minimum_height is set, don't allow height or width to
+    be set to anything smaller!
 
 0.52    Aug 21, 2010
   - POD updates
